@@ -1,3 +1,126 @@
-<h1><%= message %></h1>
-<h2><%= error.status %></h2>
-<pre><%= error.stack %></pre>
+<!doctype html>
+<html lang="en">
+<% include ./head.ejs %>
+
+<body>
+  <% include ./nav.ejs %>
+  <div class="container-fluid" style="margin: 5% 5% 5% 5%">
+    <div class="row">
+      <div class="col-3">
+
+
+
+
+
+
+        <div class="chat_container">
+          <h6><%= nick %></h6>
+          <div class="col-sm-12 message_section">
+            <div class="row">
+              <div class="chat_area">
+                <ul class="list-unstyled" id="chat-list">
+                  <% for (var chat of chats) { %>
+                  <li class="left clearfix" style="margin-bottom:5px;">
+                    <% if (chat.user == user) { %>
+                    <h6 class="float-right"><%= chat.user %></h6>
+                    <div class="float-right chat-body2 clearfix">
+                      <p><%= chat.chat %></p>
+                      <div class="chat_time float-left"><%= chat.time %></div>
+                    </div>
+                    <% } else if (chat.user == 'system') { %>
+                    <div class="chat-body-sytem">
+                      <p align="center"><%= chat.chat %></p>
+                      <div>
+                        <% } else { %>
+                        <h6 class="float-left"><%= chat.user %></h6>
+                        <div class="float-left chat-body1 clearfix">
+                          <p><%= chat.chat %></p>
+                          <div class="chat_time float-left"><%= chat.time %></div>
+                        </div>
+                        <% } %>
+                  </li>
+                  <% } %>
+                </ul>
+
+              </div>
+              <!--chat_area-->
+              <div class="message_write" style="margin-bottom: 0px">
+                <form action="/game" method="post" enctype="multipart/form-date">
+                  <textarea type="text" class="form-control" placeholder="메세지를 적으세요"></textarea>
+                  <div class="clearfix"></div>
+                  <div class="chat_bottom">
+                    <input class="float-right btn btn-success" value="전송" />
+                  </div>
+                </form>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+
+
+
+
+      </div>
+      <div class="col-7">
+        <div class="row">
+          <div class="col">
+            GAME-AREA
+          </div>
+          <div class="w-100"></div>
+          <div class="col">select-area</div>
+          <div class="col">money-area</div>
+        </div>
+      </div>
+      <div class="col-2">
+        BET-history
+      </div>
+    </div>
+  </div>
+</body>
+<script src="/socket.io/socket.io.js"></script>
+<script>
+  var socket = io.connect("http://localhost:3000/game", {
+    path: '/socket.io'
+  });
+  socket.on('news', function (data) {
+    console.log(data);
+    socket.emit('reply', "HELLO NODE JS");
+  })
+
+  socket.on('join', function (data) {
+    console.log(data.chat);
+    var ul = document.getElementById("chat-list");
+    var li = document.createElement("li");
+    li.className = "left clearfix"
+    li.style = "margin-bottom:5px;"
+    
+    var div = document.createElement("div");
+    div.className = "chat-body-sytem"
+    var p = document.createElement("p");
+    p.align = "center";
+    p.textContent = data.chat
+    div.appendChild(p);
+    li.appendChild(div);
+    ul.appendChild(li);
+  })
+  socket.on('exit', function (data) {
+    console.log(data);
+    var ul = document.getElementById("chat-list");
+    var li = document.createElement("li");
+    li.className = "left clearfix"
+    li.style = "margin-bottom:5px;"
+    
+    var div = document.createElement("div");
+    div.className = "chat-body-sytem"
+    var p = document.createElement("p");
+    p.align = "center";
+    p.textContent = data.chat
+    div.appendChild(p);
+    li.appendChild(div);
+    ul.appendChild(li);
+  })    
+</script>
+
+</html>

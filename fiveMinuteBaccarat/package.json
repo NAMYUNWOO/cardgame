@@ -6,6 +6,9 @@
     "start": "node ./bin/www"
   },
   "dependencies": {
+    "axios": "^0.18.0",
+    "bcrypt": "^3.0.6",
+    "connect-flash": "^0.1.1",
     "cookie-parser": "~1.4.4",
     "debug": "~2.6.9",
     "dotenv": "^8.0.0",
@@ -14,7 +17,11 @@
     "express-session": "^1.16.1",
     "http-errors": "~1.6.3",
     "morgan": "~1.9.1",
+    "passport": "^0.4.0",
+    "passport-kakao": "0.0.5",
+    "passport-local": "^1.0.0",
     "sequelize": "^5.8.5",
+    "socket.io": "^2.2.0",
     "sqlite": "^3.0.3"
   },
   "devDependencies": {

@@ -38,10 +38,10 @@ db.User = require('./user')(sequelize,Sequelize);
 db.Game = require('./game')(sequelize,Sequelize);
 db.Bet = require('./bet')(sequelize,Sequelize);
 
-db.User.hasMany(db.Bet,{foreignKey : 'bettor',sourceKey:"id"});
-db.Bet.belongsTo(db.User,{foreignKey : 'bettor',targetKey:"id"});
+db.User.hasMany(db.Bet);
+db.Bet.beLongsTo(db.User);
 
-db.Game.hasMany(db.Bet,{foreignKey : 'gameNum',sourceKey:"id"});
-db.Bet.belongsTo(db.Game,{foreignKey : 'gameNum',targetKey:"id"});
+db.Game.hasMany(db.Bet);
+db.Bet.beLongsTo(db.Game);
 
 module.exports = db;

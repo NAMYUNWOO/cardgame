@@ -1,18 +1,11 @@
-module.exports = (sequelize,DataTypes) => {
-    sequelize.define('bet', {
-        betId:{
-            type: DataTypes.INTEGER,
-            autoIncrement: true,
-            unique:true,
-        },
-        betMoney:{
-            type: DataTypes.INTEGER,
-        },
-        earnMoney:{
-            type: DataTypes.INTEGER,
-        },                        
-    },{
-        timestamps:true,
-        paranoid:true,
-    })
-}
+'use strict';
+module.exports = (sequelize, DataTypes) => {
+  const Bet = sequelize.define('Bet', {
+    betMoney: DataTypes.INTEGER,
+    earn: DataTypes.INTEGER
+  }, {});
+  Bet.associate = function(models) {
+    // associations can be defined here
+  };
+  return Bet;
+};

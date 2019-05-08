@@ -2,26 +2,41 @@ var createError = require('http-errors');
 var express = require('express');
 var path = require('path');
 const sqlite = require('sqlite3');
-
 const session = require('express-session');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
-var loginRouter = require('./routes/login');
+const authRouter = require('./routes/auth');
+var signinRouter = require('./routes/signin');
 var signupRouter = require('./routes/signup');
+var logoutRouter = require('./routes/logout');
 var gameRouter = require('./routes/game');
+
+const flash = require('connect-flash');
+const passport = require('passport');
+var sequelize = require("./models/index").sequelize
+const passportConfig = require('./passport');
+
 require('dotenv').config();
+
+
 var app = express();
+
+sequelize.sync();
+
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
+app.use(flash());
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser(process.env.COOKIE_SECRET));
-app.use(session({
+
+passportConfig(passport);
+const sessionMiddleware =  session({
   resave:false,
   saveUninitialized:false,
   secret:process.env.COOKIE_SECRET,
@@ -29,13 +44,20 @@ app.use(session({
     httpOnly:true,
     secure:false
   }
-}));
+});
+app.use(sessionMiddleware);
+
+app.use(passport.initialize());
+app.use(passport.session());
 
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', loginRouter);
+
+app.use('/', signinRouter);
 app.use('/signup',signupRouter);
 app.use('/game', gameRouter);
+app.use('/auth', authRouter);
+app.use('/logout', logoutRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -53,4 +75,4 @@ app.use(function(err, req, res, next) {
   res.render('error');
 });
 
-module.exports = app;
+module.exports = {app:app,sessionMiddleware:sessionMiddleware};

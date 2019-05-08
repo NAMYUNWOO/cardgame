@@ -8,48 +8,43 @@
   <!-- Bootstrap CSS -->
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
   <script>
-  clickedSignUp = false;
   function signUp(){
-    if(clickedSignUp === false){
-      var SignInBtn = document.getElementById('SignIn');
-      var pwre = document.getElementById('pw_re');
-      var gth = document.getElementById('groupsTohide');
-      clickedSignUp = true;
-      pwre.focus();
-      return;
-    }
-    var email = document.getElementById('email');
-    var pwd = document.getElementById('pw');
-    var pwd_re = document.getElementById('pw_re');
-    var catSelect = document.getElementById('option1');
-    var dogSelect = document.getElementById('option2');
+    var code = document.getElementById('code');
+    var passwordd = document.getElementById('password');
+    var passwordd_re = document.getElementById('password_re');
     var nick = document.getElementById('nick');
-    if(!validateEmail(email.value)){
+
+    if(!validatecode(code.value)){
       alert("코드 형식이 맞지 않습니다");
-      email.focus();
+      code.focus();
       return;
     }
-    if(pwd.value == ""){
+    if(passwordd.value == ""){
       alert("암호를 입력해주세요");
-      pwd.focus();
+      passwordd.focus();
       return
     }
-    if(pwd_re.value == ""){
+    if(nick.value == ""){
+      alert("닉네임을 입력해주세요");
+      nick.focus();
+      return
+    }    
+    if(passwordd_re.value == ""){
       alert("암호재입력 란을 입력해주세요");
-      pw_re.focus();
+      password_re.focus();
       return
     }
-    if(pwd.value != pwd_re.value){
+    if(passwordd.value != passwordd_re.value){
       alert("암호재입력이 올바르지 않습니다.");
-      pwd.focus();
+      passwordd.focus();
       return
     }
     signUpForm.submit();
   }
-  function validateEmail(email) {
+  function validatecode(code) {
     var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     // 사이트 코드 형식에 맞게 패턴 수정 해야함 (현재는 이메일 패턴)
-    return re.test(String(email).toLowerCase());
+    return true;//re.test(String(code).toLowerCase());
   }
   </script>
   <link rel="shortcut icon" href="/favicon.ico">
@@ -62,13 +57,15 @@
 
       <div style="width: 20rem;margin-top:5rem ;background-color:#212529">
 
-        <form action="/" method="post" name="signUpForm">
-          <input type="text" id="email" name="email" class="form-control" placeholder="코드입력" style="margin-bottom:5px;" />
-          <input type="password" id="pw" name="pw" class="form-control" placeholder="암호입력" style="margin-bottom:5px;"/>
-          <input type="password" id="pw_re" name="pw_re" class="form-control" placeholder="암호재입력" />
+        <form action="/auth/signup" method="post" name="signUpForm">
+          <input type="text" id="code" name="code" class="form-control" placeholder="코드입력" style="margin-bottom:5px;" />
+          <input type="text" id="nick" name="nick" class="form-control" placeholder="닉네임입력" style="margin-bottom:5px;" />
+          <input type="password" id="password" name="password" class="form-control" placeholder="암호입력" style="margin-bottom:5px;"/>
+          <input type="password" id="password_re" name="password_re" class="form-control" placeholder="암호재입력" />
           <br>
           <input type="button" id="SignUp" class="form-control btn-outline-warning" onclick="signUp()" value="Register"/>
         </form>
+        <p class="text-danger" align="center"><%= message %></p>
       </div>
     </div>
   <!-- Optional JavaScript -->
