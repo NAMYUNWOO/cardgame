@@ -19,13 +19,13 @@ module.exports = (server,app,sessionMiddleWare) => {
                         .replace(/\?.+/,'')
         socket.join(roomId);
         console.log(`${req.session.nick}님이 입장하셨습니다.`)
-        game.emit('join',{chat:`${req.session.nick}님이 입장하셨습니다.`});
+        game.to(roomId).emit('join',{chat:`${req.session.nick}님이 입장하셨습니다.`});
         //socket.to(roomId).emit('join',{chat:`${req.session.nick}님이 입장하셨습니다.`});
 
         socket.on("disconnect", () =>{
             socket.leave(roomId);
             console.log(`${req.session.nick}님이 퇴장하셨습니다.`);
-            game.emit('exit',{chat:`${req.session.nick}님이 퇴장하셨습니다.`});
+            game.to(roomId).emit('exit',{chat:`${req.session.nick}님이 퇴장하셨습니다.`});
             //socket.to(roomId).emit('exit',{chat:`${req.session.nick}님이 퇴장하셨습니다.`});
         })
 

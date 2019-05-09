@@ -4,8 +4,21 @@
 
 <body>
   <% include ./nav.ejs %>
-  <div class="container-fluid" style="margin: 5% 5% 5% 5%">
+  <div class="container-fluid" style="margin-top: 30px">
     <div class="row">
+      <div class="col-1">
+        BET-history
+      </div>
+      <div class="col-8">
+        <div class="row">
+          <div class="col">
+            GAME-AREA
+          </div>
+          <div class="w-100"></div>
+          <div class="col">select-area</div>
+          <div class="col">money-area</div>
+        </div>
+      </div>
       <div class="col-3">
 
 
@@ -14,10 +27,9 @@
 
 
         <div class="chat_container">
-          <h6><%= nick %></h6>
           <div class="col-sm-12 message_section">
             <div class="row">
-              <div class="chat_area">
+              <div class="chat_area" id="chat_area">
                 <ul class="list-unstyled" id="chat-list">
                   <% for (var chat of chats) { %>
                   <li class="left clearfix" style="margin-bottom:5px;">
@@ -45,11 +57,11 @@
               </div>
               <!--chat_area-->
               <div class="message_write" style="margin-bottom: 0px">
-                <form action="/game" method="post" enctype="multipart/form-date">
-                  <textarea type="text" class="form-control" placeholder="메세지를 적으세요"></textarea>
+                <form action="/game" id="chat-form" method="post" enctype="multipart/form-date">
+                  <input name="chat" type="text" class="form-control" placeholder="메세지를 적으세요"/>
                   <div class="clearfix"></div>
                   <div class="chat_bottom">
-                    <input class="float-right btn btn-success" value="전송" />
+                    <button type="submit" class="float-right btn btn-success" value="전송" >전송</button>
                   </div>
                 </form>
               </div>
@@ -63,27 +75,20 @@
 
 
       </div>
-      <div class="col-7">
-        <div class="row">
-          <div class="col">
-            GAME-AREA
-          </div>
-          <div class="w-100"></div>
-          <div class="col">select-area</div>
-          <div class="col">money-area</div>
-        </div>
-      </div>
-      <div class="col-2">
-        BET-history
-      </div>
+
     </div>
   </div>
 </body>
 <script src="/socket.io/socket.io.js"></script>
 <script>
+  function scrollAlwaysDown () {
+    var messageBody = document.querySelector('#chat_area');
+    messageBody.scrollTop = messageBody.scrollHeight - messageBody.clientHeight;
+  }
   var socket = io.connect("http://localhost:3000/game", {
     path: '/socket.io'
   });
+  var user = "<%= user %>"
   socket.on('news', function (data) {
     console.log(data);
     socket.emit('reply', "HELLO NODE JS");
@@ -95,7 +100,7 @@
     var li = document.createElement("li");
     li.className = "left clearfix"
     li.style = "margin-bottom:5px;"
-    
+
     var div = document.createElement("div");
     div.className = "chat-body-sytem"
     var p = document.createElement("p");
@@ -104,6 +109,7 @@
     div.appendChild(p);
     li.appendChild(div);
     ul.appendChild(li);
+    scrollAlwaysDown();
   })
   socket.on('exit', function (data) {
     console.log(data);
@@ -111,7 +117,7 @@
     var li = document.createElement("li");
     li.className = "left clearfix"
     li.style = "margin-bottom:5px;"
-    
+
     var div = document.createElement("div");
     div.className = "chat-body-sytem"
     var p = document.createElement("p");
@@ -120,7 +126,54 @@
     div.appendChild(p);
     li.appendChild(div);
     ul.appendChild(li);
-  })    
+    scrollAlwaysDown();
+  });
+  socket.on('chat',function(data) {
+    var ul = document.getElementById("chat-list");
+    var li = document.createElement("li");
+    li.className = "left clearfix"
+    li.style = "margin-bottom:5px;"                        
+    var h6_nick = document.createElement("h6");
+    var div_chat = document.createElement("div");
+    var p_chat = document.createElement("p");
+    var div_time = document.createElement("div");
+    if (data.nick == user ){
+      h6_nick.style = "text-align: right;"
+      div_chat.className = "float-right chat-body2 clearfix"
+      div_time.className = "chat_time float-right"
+    }else{
+      h6_nick.style = "text-align: left;"
+      div_chat.className = "float-left chat-body1 clearfix"
+      div_time.className = "chat_time float-left"      
+    }
+    h6_nick.textContent = data.nick
+    p_chat.textContent = data.chat
+    var timenowString = new Date().toLocaleTimeString();
+    div_time.textContent = timenowString
+    div_chat.appendChild(p_chat);
+    div_chat.appendChild(div_time);
+    li.appendChild(h6_nick);
+    li.appendChild(div_chat);
+    ul.appendChild(li);
+    scrollAlwaysDown()
+  });
+  document.querySelector("#chat-form").addEventListener('submit',function (e) {
+    e.preventDefault();
+    if (e.target.chat.value){
+      var xhr = new XMLHttpRequest();
+      xhr.onload = function () {
+        if (xhr.status === 200) {
+          e.target.chat.value = '';
+        }else{
+          console.error(xhr.responseText);
+        }
+      }
+      xhr.open('POST','/game/chat');
+      xhr.setRequestHeader('Content-Type','application/json');
+      xhr.send(JSON.stringify({chat:this.chat.value}))
+    }
+
+  });
 </script>
 
 </html>

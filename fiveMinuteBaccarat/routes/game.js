@@ -7,12 +7,24 @@ var router = express.Router();
 router.get('/', isLoggedIn ,function(req, res, next) {
   var nick = req.user.dataValues.nick;
   req.session.nick = nick;
-  chats = [{user:"myself",chat:"내가쓴글 내가쓴글......내가쓴글 내가쓴글......내가쓴글 내가쓴글......내가쓴글 내가쓴글......",time:"2019-05-08 20:00:00"},
-           {user:"system",chat:"시스템 공지 올라간다",time:"2019-05-08 20:01:00"},
-           {user:"user_i",chat:"타인이쓴글 타인이쓴글......타인이쓴글 타인이쓴글......타인이쓴글 타인이쓴글......",time:"2019-05-08 20:02:00"},
+  chats = [{user:"system",chat:"바르고 고운 말을 씁시다",time:"2019-05-08 20:01:00"},
           ];
-  res.render('game', { nick: nick ,myprofile:req.user,chats:chats,user:"myself" });
+  res.render('game', { nick: nick ,myprofile:req.user,chats:chats,user:nick });
 });
 
+router.post('/chat', isLoggedIn , async (req, res, next) => {
+  try{
+    const chat = {
+      nick : req.session.nick,
+      chat : req.body.chat
+    };
+    console.log(req.session.nick);
+    req.app.get('io').of('/game').to('game').emit('chat',chat);
+    res.send('ok');
+  }catch(error){
+    console.log(error);
+    next(error);
+  }
+});
 
 module.exports = router;
