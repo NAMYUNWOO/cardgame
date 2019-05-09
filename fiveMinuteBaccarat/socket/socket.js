@@ -27,8 +27,7 @@ module.exports = (server,app,sessionMiddleWare) => {
             console.log(`${req.session.nick}님이 퇴장하셨습니다.`);
             game.to(roomId).emit('exit',{chat:`${req.session.nick}님이 퇴장하셨습니다.`});
             //socket.to(roomId).emit('exit',{chat:`${req.session.nick}님이 퇴장하셨습니다.`});
-        })
-
+        });
     })
 
     io.on('connection',(socket) => {

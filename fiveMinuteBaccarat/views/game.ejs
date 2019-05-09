@@ -6,20 +6,38 @@
   <% include ./nav.ejs %>
   <div class="container-fluid" style="margin-top: 30px">
     <div class="row">
-      <div class="col-1">
-        BET-history
-      </div>
-      <div class="col-8">
-        <div class="row">
-          <div class="col">
-            GAME-AREA
+      <div class="col-10">
+          <canvas id="BGCanvas"></canvas>
+          <canvas id="mainCanvas"></canvas>
+          <canvas id="animationCanvas"></canvas>
+          <canvas id="accountCanvas"></canvas>
+  
+          <div id="ButtonsCardgame">
+            <div id="player-btn-container" class="btn-container">
+              <buttonCardgame onclick="gamePlay.setbetOutcomePlayer()" type="buttonCardgame" id="player">Player</buttonCardgame>
+            </div>
+            <div id="tie-btn-container" class="btn-container">
+              <buttonCardgame onclick="gamePlay.setbetOutcomeTie() " type="buttonCardgame" id="tie">Tie</buttonCardgame>
+            </div>
+            <div id="banker-btn-container" class="btn-container">
+              <buttonCardgame onclick="gamePlay.setbetOutcomeBanker() " type="buttonCardgame" id="banker">Banker</buttonCardgame>
+            </div>
           </div>
-          <div class="w-100"></div>
-          <div class="col">select-area</div>
-          <div class="col">money-area</div>
-        </div>
+          
+          <div id="AccountCardgame">
+            <input type="image" id="Minus" class="btns" onClick="accountDisplay.decBet();"
+              src="/images/MiscImages/Minus.png" />
+            <input type="image" id="BlueChip" class="chips" onClick="accountDisplay.blueSelect();"
+              src="/images/MiscImages/BlueChip.png" />
+            <input type="image" id="GreenChip" class="chips" onClick="accountDisplay.greenSelect();"
+              src="/images/MiscImages/GreenChip.png" />
+            <input type="image" id="RedChip" class="chips" onClick='accountDisplay.redSelect();'
+              src="/images/MiscImages/RedChip.png" />
+            <input type="image" id="Plus" class="btns" onClick="accountDisplay.incBet();"
+              src="/images/MiscImages/Plus.png" />
+          </div>
       </div>
-      <div class="col-3">
+      <div class="col-2">
 
 
 
@@ -79,6 +97,11 @@
     </div>
   </div>
 </body>
+<script src="/asyncHelperFunctions.js"></script>
+<script src="/main.js"></script>
+<script src="/animations.js"></script>
+<script src="/account.js"></script>
+<script src="/gamePlay.js"></script>
 <script src="/socket.io/socket.io.js"></script>
 <script>
   function scrollAlwaysDown () {
@@ -141,10 +164,14 @@
       h6_nick.style = "text-align: right;"
       div_chat.className = "float-right chat-body2 clearfix"
       div_time.className = "chat_time float-right"
+    } else if (data.nick == "system"){
+      h6_nick.style = "text-align: center;"
+      div_chat.className = "chat-body-sytem"
+      div_time.className = "chat_time float-left"
     }else{
       h6_nick.style = "text-align: left;"
       div_chat.className = "float-left chat-body1 clearfix"
-      div_time.className = "chat_time float-left"      
+      div_time.className = "chat_time float-left"
     }
     h6_nick.textContent = data.nick
     p_chat.textContent = data.chat
@@ -157,6 +184,23 @@
     ul.appendChild(li);
     scrollAlwaysDown()
   });
+  socket.on('cardGame', function (data) {
+    console.log(data);
+    var ul = document.getElementById("chat-list");
+    var li = document.createElement("li");
+    li.className = "left clearfix"
+    li.style = "margin-bottom:5px;"
+
+    var div = document.createElement("div");
+    div.className = "chat-body-sytem"
+    var p = document.createElement("p");
+    p.align = "center";
+    p.textContent = data.chat
+    div.appendChild(p);
+    li.appendChild(div);
+    ul.appendChild(li);
+    scrollAlwaysDown();
+  });  
   document.querySelector("#chat-form").addEventListener('submit',function (e) {
     e.preventDefault();
     if (e.target.chat.value){
