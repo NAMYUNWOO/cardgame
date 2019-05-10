@@ -1,0 +1,42 @@
+<div class="chat_container">
+    <div class="col-sm-12 message_section">
+        <div class="row">
+            <div class="chat_area" id="chat_area">
+                <ul class="list-unstyled" id="chat-list">
+                    <% for (var chat of chats) { %>
+                    <li class="left clearfix" style="margin-bottom:5px;">
+                        <% if (chat.user == user) { %>
+                        <h6 class="float-right"><%= chat.user %></h6>
+                        <div class="float-right chat-body2 clearfix">
+                            <p><%= chat.chat %></p>
+                            <div class="chat_time float-left"><%= chat.time %></div>
+                        </div>
+                        <% } else if (chat.user == 'system') { %>
+                        <div class="chat-body-sytem">
+                            <p align="center"><%= chat.chat %></p>
+                            <div>
+                                <% } else { %>
+                                <h6 class="float-left"><%= chat.user %></h6>
+                                <div class="float-left chat-body1 clearfix">
+                                    <p><%= chat.chat %></p>
+                                    <div class="chat_time float-left"><%= chat.time %></div>
+                                </div>
+                                <% } %>
+                    </li>
+                    <% } %>
+                </ul>
+
+            </div>
+            <!--chat_area-->
+            <div class="message_write" style="margin-bottom: 0px">
+                <form action="/game" id="chat-form" method="post" enctype="multipart/form-date">
+                    <input name="chat" type="text" class="form-control" placeholder="메세지를 적으세요" />
+                    <div class="clearfix"></div>
+                    <div class="chat_bottom">
+                        <button type="submit" class="float-right btn btn-success" value="전송">전송</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

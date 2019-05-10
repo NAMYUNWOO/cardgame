@@ -4,7 +4,7 @@ canvas{
   position:absolute;
 }
 
-buttonCardgame{
+.buttonCardgame{
   margin: 10px;
   background: rgba(0, 0, 0, 0.0);
   /* font-family: TheBlacklist, Arial, Helvetica, sans-serif; */
@@ -14,7 +14,7 @@ buttonCardgame{
   justify-content: center;
 }
 
-buttonCardgame:hover{
+.buttonCardgame:hover{
   color: white;
 }
 

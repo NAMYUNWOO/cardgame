@@ -1,0 +1,37 @@
+<canvas id="BGCanvas"></canvas>
+<canvas id="mainCanvas"></canvas>
+<canvas id="animationCanvas"></canvas>
+<canvas id="accountCanvas"></canvas>
+
+<div id="ButtonsCardgame">
+    <div id="player-btn-container" class="btn-container">
+      <form action="/game" id="playerBet-form" method="post" enctype="multipart/form-date">
+        <button class="buttonCardgame" type="submit" id="player" value="player">Player</button> <!--onclick="gamePlay.setbetOutcomePlayer()" -->
+      </form>
+    </div>
+    <div id="tie-btn-container" class="btn-container">
+      <form action="/game" id="tieBet-form" method="post" enctype="multipart/form-date">
+        <button class="buttonCardgame" type="submit" id="tie" value="tie">Tie</button> <!--onclick="gamePlay.setbetOutcomeTie()"-->
+      </form>
+    </div>
+    <div id="banker-btn-container" class="btn-container">
+      <form action="/game" id="bankerBet-form" method="post" enctype="multipart/form-date">
+        <button class="buttonCardgame" type="submit" id="banker" value="banker">Banker</button> <!--onclick="gamePlay.setbetOutcomeBanker()"-->
+      </form>
+    </div>
+  
+  
+</div>
+
+<div id="AccountCardgame">
+  <input type="image" id="Minus" class="btns" onClick="accountDisplay.decBet();"
+    src="/images/MiscImages/Minus.png" />
+  <input type="image" id="BlueChip" class="chips" onClick="accountDisplay.blueSelect();"
+    src="/images/MiscImages/BlueChip.png" />
+  <input type="image" id="GreenChip" class="chips" onClick="accountDisplay.greenSelect();"
+    src="/images/MiscImages/GreenChip.png" />
+  <input type="image" id="RedChip" class="chips" onClick='accountDisplay.redSelect();'
+    src="/images/MiscImages/RedChip.png" />
+  <input type="image" id="Plus" class="btns" onClick="accountDisplay.incBet();"
+    src="/images/MiscImages/Plus.png" />
+</div>

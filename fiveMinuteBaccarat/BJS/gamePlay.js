@@ -28,15 +28,15 @@ const gamePlay = (()=>{
 
 //Game Mechanics
 
-  function startGame(){shoe = setUp.createShoe(numDecks);}
+  function startGame(){};
 
-  function setbetOutcomePlayer(){betOutcome = 'P'; drawInitialCards();
+  function setbetOutcomePlayer(shoe_get){betOutcome = 'P';shoe=shoe_get; drawInitialCards();
     ctx.drawImage(setUp.miscImgMap.get('bitcoin'),cWidth*.25-coinSize/2,cHeight*.25-coinSize/2,coinSize,coinSize);}
 
-  function setbetOutcomeTie(){betOutcome = 'T';drawInitialCards();
+  function setbetOutcomeTie(shoe_get){betOutcome = 'T';shoe=shoe_get;drawInitialCards();
     ctx.drawImage(setUp.miscImgMap.get('bitcoin'),cWidth*0.5-coinSize/2,cHeight*.25-coinSize/2,coinSize,coinSize);}
 
-  function setbetOutcomeBanker(){betOutcome = 'B';drawInitialCards();
+  function setbetOutcomeBanker(shoe_get){betOutcome = 'B';shoe=shoe_get;drawInitialCards();
     ctx.drawImage(setUp.miscImgMap.get('bitcoin'),cWidth*0.75-coinSize/2,cHeight*.25-coinSize/2,coinSize,coinSize);}
 
   function calcHandValue(hand){

@@ -6,8 +6,7 @@ acntCanvas.width = cWidth;
 acntCanvas.height = cHeight;
 
 //Need to make these variables private
-let balance=100000,
-  bet=100;
+let bet=0;
 
 //Centers Player, Banker, Tie Buttons
 (function(){

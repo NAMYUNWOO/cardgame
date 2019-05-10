@@ -25,8 +25,8 @@ router.post('/signup',isNotLoggedIn,async (req,res,next) => {
             await User.create({
                 code,
                 password:hash,
-                money:1000,
-                validCode:false,
+                money:10000,
+                validCode:true,
                 nick:nick
             });
             return res.redirect('/');

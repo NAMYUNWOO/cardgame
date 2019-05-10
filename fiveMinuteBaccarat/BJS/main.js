@@ -52,17 +52,8 @@ const setUp = (function(){
   });
 
   function createShoe(numDecks){
-    //Inefficient and insecure
-    let shoe = [];
-    for(let i = 0; i<numDecks; i++){
-      let tempDeck = deckCards.slice(0,52);
-      for(let j = tempDeck.length; j>0; j--){
-        //Replace with difference random number generator
-        let r = Math.floor(Math.random()*j)
-        shoe.push(...tempDeck.splice(r,1));
-      }
-    }
-    return shoe;
+
+    return [];
   }
 
   function drawBG(){
