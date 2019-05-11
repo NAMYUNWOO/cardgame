@@ -85,6 +85,8 @@ const accountDisplay=(()=>{
     acntctx.textAlign = 'left';
     acntctx.clearRect(xPos,yPos-acntFont/2,acntFont*4,acntFont);
     acntctx.fillText(bet,xPos,yPos);
+    var betChoice = document.getElementById("bet");
+    betChoice.textContent = bet;
   }
   displayBet();
 

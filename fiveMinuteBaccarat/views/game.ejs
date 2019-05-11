@@ -4,19 +4,30 @@
 
 <body>
   <% include ./nav.ejs %>
+  <h3 id="timeOut">60</h3>
   <div class="container-fluid" style="margin-top: 30px">
     <div class="row">
       <div class="col-9">
-          <% include ./bacarrat.ejs %>
+        <% include ./bacarrat.ejs %>
       </div>
       <div class="col-3">
-          <% include ./chat.ejs %>
+        <% include ./chat.ejs %>
       </div>
     </div>
   </div>
 </body>
 <script>
-  let balance= parseInt("<%= money %>");
+  let balance = parseInt("<%= money %>");
+
+  // Update the count down every 1 second
+  setInterval(function () {
+
+
+    var t = parseInt(document.getElementById("timeOut").innerText);
+    // Output the result in an element with id="demo"
+    document.getElementById("timeOut").innerHTML = t - 1;
+
+  }, 1000);
 </script>
 <script src="/asyncHelperFunctions.js"></script>
 <script src="/main.js"></script>
@@ -25,7 +36,7 @@
 <script src="/gamePlay.js"></script>
 <script src="/socket.io/socket.io.js"></script>
 <script>
-  function scrollAlwaysDown () {
+  function scrollAlwaysDown() {
     var messageBody = document.querySelector('#chat_area');
     messageBody.scrollTop = messageBody.scrollHeight - messageBody.clientHeight;
   }
@@ -72,24 +83,24 @@
     ul.appendChild(li);
     scrollAlwaysDown();
   });
-  socket.on('chat',function(data) {
+  socket.on('chat', function (data) {
     var ul = document.getElementById("chat-list");
     var li = document.createElement("li");
     li.className = "left clearfix"
-    li.style = "margin-bottom:5px;"                        
+    li.style = "margin-bottom:5px;"
     var h6_nick = document.createElement("h6");
     var div_chat = document.createElement("div");
     var p_chat = document.createElement("p");
     var div_time = document.createElement("div");
-    if (data.nick == user ){
+    if (data.nick == user) {
       h6_nick.style = "text-align: right;"
       div_chat.className = "float-right chat-body2 clearfix"
       div_time.className = "chat_time float-right"
-    } else if (data.nick == "system"){
+    } else if (data.nick == "system") {
       h6_nick.style = "text-align: center;"
       div_chat.className = "chat-body-sytem"
       div_time.className = "chat_time float-left"
-    }else{
+    } else {
       h6_nick.style = "text-align: left;"
       div_chat.className = "float-left chat-body1 clearfix"
       div_time.className = "chat_time float-left"
@@ -104,7 +115,7 @@
     li.appendChild(div_chat);
     ul.appendChild(li);
     scrollAlwaysDown()
-  });  
+  });
   socket.on('cardGame', function (data) {
     console.log(data);
     var ul = document.getElementById("chat-list");
@@ -122,33 +133,9 @@
     ul.appendChild(li);
     scrollAlwaysDown();
   });
-  socket.on('bet',function(data) {
-    const betFunc = {"player":gamePlay.setbetOutcomePlayer,
-                    "tie":gamePlay.setbetOutcomeTie,
-                    "banker":gamePlay.setbetOutcomeBanker
-                  };
-    betFunc[data.bet](data.shoe);
-  })
-  document.querySelector("#chat-form").addEventListener('submit',function (e) {
-    e.preventDefault();
-    if (e.target.chat.value){
-      var xhr = new XMLHttpRequest();
-      xhr.onload = function () {
-        if (xhr.status === 200) {
-          e.target.chat.value = '';
-        }else{
-          console.error(xhr.responseText);
-        }
-      }
-      xhr.open('POST','/game/chat');
-      xhr.setRequestHeader('Content-Type','application/json');
-      xhr.send(JSON.stringify({chat:this.chat.value}))
-    }
 
-  });
-
-  function betSend(betVal_get,betVal){
-    if (betVal_get == betVal){
+  function betSend(betChoice, betMoney) {
+    if ((betChoice !== "null") && (betMoney != "0")) {
       var xhr = new XMLHttpRequest();
 
       xhr.onload = function () {
@@ -156,31 +143,92 @@
           console.error("error");
         }
       }
-      xhr.open('POST','/game/bet');
-      xhr.setRequestHeader('Content-Type','application/json');
-      xhr.send(JSON.stringify({bet:betVal}))      
+      xhr.open('POST', '/game/bet');
+      xhr.setRequestHeader('Content-Type', 'application/json');
+      xhr.send(JSON.stringify({ betChoice: betChoice, betMoney: betMoney }))
     }
   }
-  document.querySelector("#bankerBet-form").addEventListener('submit',function (e) {
+
+  socket.on('collectBet', function (data) {
+    const betTag = document.getElementById("bet");
+    const betChoice = betTag.value
+    const betMoney = betTag.innerText;
+    document.getElementById("bet");
+    //socket.emit('betSend', {betChoice:betChoice});
+    betSend(betChoice, betMoney);
+  });
+
+  socket.on('startgame', function (data) {
+    var betTag = document.getElementById("bet");
+    const betChoice = betTag.value;
+    if (betChoice !== "") {
+      const betFunc = {
+        "P": gamePlay.setbetOutcomePlayer,
+        "T": gamePlay.setbetOutcomeTie,
+        "B": gamePlay.setbetOutcomeBanker,
+        "null": gamePlay.observeGame
+      };
+      betFunc[betChoice](data.shoe);
+      document.getElementById("timeOut").textContent = 60;
+      //socket.emit('betres', "HELLO NODE JS");
+    }
+  });
+  socket.on('accountUpdate', function (data) {
+    const money = data.money;
+    const payout = data.payout;
+  });
+  document.querySelector("#chat-form").addEventListener('submit', function (e) {
     e.preventDefault();
+    if (e.target.chat.value) {
+      var xhr = new XMLHttpRequest();
+      xhr.onload = function () {
+        if (xhr.status === 200) {
+          e.target.chat.value = '';
+        } else {
+          console.error(xhr.responseText);
+        }
+      }
+      xhr.open('POST', '/game/chat');
+      xhr.setRequestHeader('Content-Type', 'application/json');
+      xhr.send(JSON.stringify({ chat: this.chat.value }))
+    }
+
+  });
+
+  function chBetTag(ch) {
+    var betHidden = document.getElementById("bet");
+    if (betHidden.value === ch) {
+      ch = "null"
+    }
+    betHidden.setAttribute("value", ch);
+    gamePlay.setBetMark(ch);
+  }
+
+  document.querySelector("#bankerBet-form").addEventListener('submit', function (e) {
+    e.preventDefault();
+    chBetTag("B");
     const bet = e.target.innerText.toLowerCase()
     console.log(bet);
-    betSend(bet,'banker');
+    //betSend(bet,'banker');
     //gamePlay.setbetOutcomeBanker();
-    
+
   });
-  document.querySelector("#playerBet-form").addEventListener('submit',function (e) {
+  document.querySelector("#playerBet-form").addEventListener('submit', function (e) {
     e.preventDefault();
-    const bet = e.target.innerText.toLowerCase()
-    betSend(bet,'player');
-    console.log(bet);   
+    chBetTag("P");
+    const bet = e.target.innerText.toLowerCase();
+    console.log(bet);
+    //betSend(bet,'player');
+
+
     //gamePlay.setbetOutcomePlayer();
-  });  
-  document.querySelector("#tieBet-form").addEventListener('submit',function (e) {
+  });
+  document.querySelector("#tieBet-form").addEventListener('submit', function (e) {
     e.preventDefault();
+    chBetTag("T");
     const bet = e.target.innerText.toLowerCase()
-    betSend(bet,'tie');
-    console.log(bet);   
+    console.log(bet);
+    //betSend(bet,'tie');
     //gamePlay.setbetOutcomeTie();
   });       
 </script>

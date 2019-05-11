@@ -1,5 +1,8 @@
 const SocketIO = require('socket.io');
 const axios = require('axios');
+const {createShoe} = require('../serverSide_game/createShoe');
+const {getGameOutcome} = require('../serverSide_game/calcGame');
+const {Game} = require('../models');
 
 module.exports = (server,app,sessionMiddleWare) => {
     const io = SocketIO(server,{path:'/socket.io'});
@@ -9,7 +12,28 @@ module.exports = (server,app,sessionMiddleWare) => {
 
     io.use((socket,next) => {
         sessionMiddleWare(socket.request,socket.request.res,next);
-    })    
+    });    
+
+    io.interval = setInterval(() => {
+        const shoe = createShoe(6);
+        const shoeCopied = JSON.parse(JSON.stringify(shoe));
+        const GameResObj = getGameOutcome(shoeCopied);
+        const GameRes = JSON.stringify(GameResObj);
+        const gameId = parseInt(new Date().getTime()/1000);
+        app.gameInfo.gameId = gameId;
+        app.gameInfo.outcome = GameResObj.outcome;
+        console.log(GameRes,gameId);
+        // Game.create({
+        //     gameResult:GameRes,
+        //     gameId:gameId,
+        // });
+        console.log();
+        game.emit('collectBet',{collectBet:"null String"});
+        setTimeout(()=>{
+            game.emit('startgame',{shoe:shoe});
+        },1000);
+    },60000);
+
 
     game.on('connection', (socket) => {
         const req = socket.request;
@@ -28,7 +52,8 @@ module.exports = (server,app,sessionMiddleWare) => {
             game.to(roomId).emit('exit',{chat:`${req.session.nick}님이 퇴장하셨습니다.`});
             //socket.to(roomId).emit('exit',{chat:`${req.session.nick}님이 퇴장하셨습니다.`});
         });
-    })
+
+    });
 
     io.on('connection',(socket) => {
         const req =socket.request;

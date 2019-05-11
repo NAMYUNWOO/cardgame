@@ -9,12 +9,13 @@ animationCanvas.height = cHeight;
 const anictx = animationCanvas.getContext('2d');
 
 const gamePlay = (()=>{
-
+  let observeMode = false;
   let canPlay = true;
   const numDecks = 6;
   let shoe = [];
   const cutCard = 16;
-  let betOutcome, outcome;
+  let betOutcome = "";
+  let outcome = "";
   const coinSize = Math.floor(cWidth/10),
     cardWidth = Math.floor(cWidth/10),
     cardHeight = Math.floor(cardWidth*1.4);
@@ -28,16 +29,47 @@ const gamePlay = (()=>{
 
 //Game Mechanics
 
+  function setBetMark(choice){
+    betOutcome = choice;
+    if (choice === 'P' ){
+      ctx.clearRect(0,0,cWidth,cHeight*.7);
+      ctx.drawImage(setUp.miscImgMap.get('bitcoin'),cWidth*.25-coinSize/2,cHeight*.25-coinSize/2,coinSize,coinSize);
+    }else if (choice === 'T'){
+      ctx.clearRect(0,0,cWidth,cHeight*.7);
+      ctx.drawImage(setUp.miscImgMap.get('bitcoin'),cWidth*0.5-coinSize/2,cHeight*.25-coinSize/2,coinSize,coinSize);
+    }else if (choice === 'B'){
+      ctx.clearRect(0,0,cWidth,cHeight*.7);
+      ctx.drawImage(setUp.miscImgMap.get('bitcoin'),cWidth*0.75-coinSize/2,cHeight*.25-coinSize/2,coinSize,coinSize);
+    }else{
+      ctx.clearRect(0,0,cWidth,cHeight*.7);
+    }
+  }
+
   function startGame(){};
 
-  function setbetOutcomePlayer(shoe_get){betOutcome = 'P';shoe=shoe_get; drawInitialCards();
-    ctx.drawImage(setUp.miscImgMap.get('bitcoin'),cWidth*.25-coinSize/2,cHeight*.25-coinSize/2,coinSize,coinSize);}
+  function observeGame(shoe_get){
+    shoe=shoe_get;
+    observeMode = true;
+    drawInitialCards();
+  }
+  function setbetOutcomePlayer(shoe_get){
+    shoe=shoe_get;
+    //setBetMark('T');
+    drawInitialCards();
+    
+  }
 
-  function setbetOutcomeTie(shoe_get){betOutcome = 'T';shoe=shoe_get;drawInitialCards();
-    ctx.drawImage(setUp.miscImgMap.get('bitcoin'),cWidth*0.5-coinSize/2,cHeight*.25-coinSize/2,coinSize,coinSize);}
+  function setbetOutcomeTie(shoe_get){
+    shoe=shoe_get;
+    //setBetMark('T');
+    drawInitialCards();
+  }
 
-  function setbetOutcomeBanker(shoe_get){betOutcome = 'B';shoe=shoe_get;drawInitialCards();
-    ctx.drawImage(setUp.miscImgMap.get('bitcoin'),cWidth*0.75-coinSize/2,cHeight*.25-coinSize/2,coinSize,coinSize);}
+  function setbetOutcomeBanker(shoe_get){
+    shoe=shoe_get;
+    //setBetMark('B');
+    drawInitialCards();
+  }
 
   function calcHandValue(hand){
     let value = 0;
@@ -110,7 +142,7 @@ const gamePlay = (()=>{
     if(canPlay==true){
       canPlay = false;
       animationCanvas.style.zIndex = 10;
-      ctx.clearRect(0,0,cWidth,cHeight*.7);
+      //ctx.clearRect(0,0,cWidth,cHeight*.7);
       anictx.clearRect(pHandX,handY,cWidth,cardHeight*2);
       pHand.length = bHand.length = 0;
       pValue = bValue = 0;
@@ -174,6 +206,9 @@ const gamePlay = (()=>{
     }
     balance+=payout;
     accountDisplay.updateBalance(payout);
+    if (!observeMode){
+      //accountDisplay.updateBalance(payout);
+    }
     discard();
     canPlay = true;
   }
@@ -198,5 +233,7 @@ const gamePlay = (()=>{
     setbetOutcomePlayer: setbetOutcomePlayer,
     setbetOutcomeTie: setbetOutcomeTie,
     setbetOutcomeBanker: setbetOutcomeBanker,
+    setBetMark:setBetMark,
+    observeGame:observeGame,
   }
 })()

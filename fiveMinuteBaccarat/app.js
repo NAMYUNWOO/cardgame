@@ -21,7 +21,7 @@ require('dotenv').config();
 
 
 var app = express();
-
+app.gameInfo = {gameId:0,outcome:""};
 sequelize.sync();
 
 
