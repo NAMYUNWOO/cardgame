@@ -38,10 +38,9 @@ db.User = require('./user')(sequelize,Sequelize);
 db.Game = require('./game')(sequelize,Sequelize);
 db.Bet = require('./bet')(sequelize,Sequelize);
 
-db.User.hasMany(db.Bet,{foreignKey : 'bettor',sourceKey:"id"});
-db.Bet.belongsTo(db.User,{foreignKey : 'bettor',targetKey:"id"});
-
-db.Game.hasMany(db.Bet,{foreignKey : 'gameNum',sourceKey:"id"});
-db.Bet.belongsTo(db.Game,{foreignKey : 'gameNum',targetKey:"id"});
+// db.User.hasMany(db.Bet,{foreignKey : 'bettor_code',sourceKey:"code"});
+// db.Bet.belongsTo(db.User,{foreignKey : 'bettor_code',targetKey:"code"});
+// db.Game.hasMany(db.Bet,{foreignKey : 'bet_gameId',sourceKey:"gameId"});
+// db.Bet.belongsTo(db.Game,{foreignKey : 'bet_gameId',targetKey:"gameId"});
 
 module.exports = db;

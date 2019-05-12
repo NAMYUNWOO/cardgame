@@ -16,6 +16,7 @@ const gamePlay = (()=>{
   const cutCard = 16;
   let betOutcome = "";
   let outcome = "";
+  var payout = 0;
   const coinSize = Math.floor(cWidth/10),
     cardWidth = Math.floor(cWidth/10),
     cardHeight = Math.floor(cardWidth*1.4);
@@ -47,25 +48,29 @@ const gamePlay = (()=>{
 
   function startGame(){};
 
-  function observeGame(shoe_get){
+  function observeGame(shoe_get,_payout){
+    payout = _payout;
     shoe=shoe_get;
     observeMode = true;
     drawInitialCards();
   }
-  function setbetOutcomePlayer(shoe_get){
+  function setbetOutcomePlayer(shoe_get,_payout){
+    payout = _payout;
     shoe=shoe_get;
     //setBetMark('T');
     drawInitialCards();
     
   }
 
-  function setbetOutcomeTie(shoe_get){
+  function setbetOutcomeTie(shoe_get,_payout){
+    payout = _payout;
     shoe=shoe_get;
     //setBetMark('T');
     drawInitialCards();
   }
 
-  function setbetOutcomeBanker(shoe_get){
+  function setbetOutcomeBanker(shoe_get,_payout){
+    payout = _payout;
     shoe=shoe_get;
     //setBetMark('B');
     drawInitialCards();
@@ -197,17 +202,10 @@ const gamePlay = (()=>{
     if(pValue==bValue){outcome='T';
     }else{pValue<bValue?outcome='B':outcome='P';}
 
-    let payout;
-    if(betOutcome!=outcome){payout=-bet;
-    }else{
-      if(betOutcome=='P'){payout=bet;
-      }else if(betOutcome=='T'){payout=bet*8;
-      }else{payout=bet*0.95;}
-    }
-    balance+=payout;
-    accountDisplay.updateBalance(payout);
+    //balance+=payout;
+    //accountDisplay.updateBalance(payout);
     if (!observeMode){
-      //accountDisplay.updateBalance(payout);
+      accountDisplay.updateBalance(payout);
     }
     discard();
     canPlay = true;

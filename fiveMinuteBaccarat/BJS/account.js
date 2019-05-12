@@ -90,13 +90,13 @@ const accountDisplay=(()=>{
   }
   displayBet();
 
-  function updateBalance(win){
+  function updateBalance(payout){
     acntctx.textAlign = 'left';
     acntctx.font = acntFont+'px Quantico';
     acntctx.clearRect(xBalance,yCord-acntFont/2,acntFont*4,acntFont);
     acntctx.fillText(balance,xBalance,yCord)
-    if(win>0){
-      animations.fadeOut(win,anictx,1,xBalance+acntFont*1.5,yCord,'up',()=>{
+    if(payout>0){
+      animations.fadeOut(payout,anictx,1,xBalance+acntFont*1.5,yCord,'up',()=>{
         animationCanvas.style.zIndex = 0;
         gamePlay.canPlay=true;
       });
