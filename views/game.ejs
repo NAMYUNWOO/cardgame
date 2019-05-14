@@ -56,7 +56,7 @@
             messageBody.scrollTop = messageBody.scrollHeight - messageBody.clientHeight;
         }
         var payout = 0;
-        var socket = io.connect("http://localhost:3000/game", {
+        var socket = io.connect("http://localhost:80/game", {
             path: '/socket.io'
         });
         var user = "<%= user %>"
