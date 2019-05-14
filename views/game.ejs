@@ -31,7 +31,6 @@
             </div>
     </body>
     <script>
-        socket.emit("getSyncTime", "")
         let balance = parseInt("<%= money %>");
 
         // Update the count down every 1 second
@@ -68,6 +67,7 @@
 
         socket.on('join', function(data) {
             console.log(data.chat);
+            socket.emit("getSyncTime", "")
             var ul = document.getElementById("chat-list");
             var li = document.createElement("li");
             li.className = "left clearfix"
