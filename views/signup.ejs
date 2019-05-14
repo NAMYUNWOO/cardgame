@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+<% include ./head.ejs %>
+
+    <body style="background-color:#212529">
+
+        <div class="container">
+            <div class="col-md-12" align="center">
+
+                <div style="width: 20rem;margin-top:5rem ;background-color:#212529">
+
+                    <form action="/auth/signup" method="post" name="signUpForm">
+                        <input type="text" id="code" name="code" class="form-control" placeholder="코드입력" style="margin-bottom:5px;" />
+                        <input type="text" id="nick" name="nick" class="form-control" placeholder="닉네임입력" style="margin-bottom:5px;" />
+                        <input type="password" id="password" name="password" class="form-control" placeholder="암호입력" style="margin-bottom:5px;" />
+                        <input type="password" id="password_re" name="password_re" class="form-control" placeholder="암호재입력" />
+                        <br>
+                        <input type="button" id="SignUp" class="form-control btn-outline-warning sign" onclick="signUp()" value="Register" />
+                    </form>
+                    <p class="text-danger" align="center">
+                        <%= message %>
+                    </p>
+                </div>
+            </div>
+            <!-- Optional JavaScript -->
+            <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    </body>
+    <script>
+        function signUp() {
+            var code = document.getElementById('code');
+            var passwordd = document.getElementById('password');
+            var passwordd_re = document.getElementById('password_re');
+            var nick = document.getElementById('nick');
+
+            if (!validatecode(code.value)) {
+                alert("코드 형식이 맞지 않습니다");
+                code.focus();
+                return;
+            }
+            if (passwordd.value == "") {
+                alert("암호를 입력해주세요");
+                passwordd.focus();
+                return
+            }
+            if (nick.value == "") {
+                alert("닉네임을 입력해주세요");
+                nick.focus();
+                return
+            }
+            if (passwordd_re.value == "") {
+                alert("암호재입력 란을 입력해주세요");
+                password_re.focus();
+                return
+            }
+            if (passwordd.value != passwordd_re.value) {
+                alert("암호재입력이 올바르지 않습니다.");
+                passwordd.focus();
+                return
+            }
+            signUpForm.submit();
+        }
+
+        function validatecode(code) {
+            var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+            // 사이트 코드 형식에 맞게 패턴 수정 해야함 (현재는 이메일 패턴)
+            return true; //re.test(String(code).toLowerCase());
+        }
+    </script>
+    <% include ./footer.ejs %>
+</html>

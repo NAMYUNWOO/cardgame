@@ -1,0 +1,206 @@
+<!doctype html>
+<html lang="en">
+<% include ./head.ejs %>
+    <body>
+        <% include ./nav.ejs %>
+            <h4 id="timeOut" align="center"><%= timeLeft %></h4>
+            <div class="container-fluid" id="container" style="margin-top: 5px">
+                    <div class="row"  style="margin-left: 0px; margin-right: 0px;">
+                        <div class="col-6" align="center" style="border:1px solid grey;" id="playerBoard"><p>플레이어</p></div>
+                        <div class="col-6" align="center" style="border:1px solid grey;" id="bankerBoard"><p>뱅커</p></div>
+                    </div>
+                <div id='cardGameHome'>
+                </div>
+                <div class="col-sm-12 btn-group btn-group-toggle" data-toggle="buttons" style='margin-top:10px; margin-bottom:10px' >
+                    <label class="btn btn-outline-primary" onclick="chBetTag(this.children[0].value)">
+                        <input type="radio" id="player-radio"  value="player" autocomplete="off"> 플레이어
+                    </label>
+                    <label class="btn btn-outline-secondary" onclick="chBetTag(this.children[0].value)">
+                        <input type="radio" id="tie-radio" value="tie" autocomplete="off"> 무
+                    </label>
+                    <label class="btn btn-outline-danger" onclick="chBetTag(this.children[0].value)">
+                        <input type="radio" id="banker-radio" value="banker" autocomplete="off"> 뱅커
+                    </label>
+                    <label class="btn btn-outline-info" onclick="chBetTag(this.children[0].value)">
+                        <input type="radio" id="null-radio" value="null" autocomplete="off"> 관전
+                    </label>
+                </div>
+                <input type="text" class="form-control" id="betMoney" placeholder="베팅머니" />
+                <h5 id="money" align='right'><%= money %></h5>
+                <% include ./chat.ejs %>
+            </div>
+    </body>
+    <script>
+        let balance = parseInt("<%= money %>");
+
+        // Update the count down every 1 second
+        setInterval(function() {
+            var t = document.getElementById("timeOut").innerText;
+            // Output the result in an element with id="demo"
+            if (t != "게임 결과"){
+                document.getElementById("timeOut").innerHTML = parseInt(t) - 1;
+            }else{
+            }
+
+        }, 1000);
+    </script>
+    <script src="/mkplayCards.js"></script>
+    <script>
+        var betChoice = "null";
+        showWaitingCards();
+    </script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        function scrollAlwaysDown() {
+            var messageBody = document.querySelector('#chat_area');
+            messageBody.scrollTop = messageBody.scrollHeight - messageBody.clientHeight;
+        }
+        var payout = 0;
+        var socket = io.connect("http://localhost:3000/game", {
+            path: '/socket.io'
+        });
+        var user = "<%= user %>"
+        socket.on('news', function(data) {
+            console.log(data);
+            socket.emit('reply', "HELLO NODE JS");
+        })
+
+        socket.on('join', function(data) {
+            console.log(data.chat);
+            var ul = document.getElementById("chat-list");
+            var li = document.createElement("li");
+            li.className = "left clearfix"
+            li.style = "margin-bottom:5px;"
+
+            var div = document.createElement("div");
+            div.className = "chat-body-sytem"
+            var p = document.createElement("p");
+            p.align = "center";
+            p.textContent = data.chat
+            div.appendChild(p);
+            li.appendChild(div);
+            ul.appendChild(li);
+            scrollAlwaysDown();
+        })
+        socket.on('exit', function(data) {
+            console.log(data);
+            var ul = document.getElementById("chat-list");
+            var li = document.createElement("li");
+            li.className = "left clearfix"
+            li.style = "margin-bottom:5px;"
+
+            var div = document.createElement("div");
+            div.className = "chat-body-sytem"
+            var p = document.createElement("p");
+            p.align = "center";
+            p.textContent = data.chat
+            div.appendChild(p);
+            li.appendChild(div);
+            ul.appendChild(li);
+            scrollAlwaysDown();
+        });
+        socket.on('chat', function(data) {
+            var ul = document.getElementById("chat-list");
+            var li = document.createElement("li");
+            li.className = "left clearfix"
+            li.style = "margin-bottom:5px;"
+            var h6_nick = document.createElement("h6");
+            var div_chat = document.createElement("div");
+            var p_chat = document.createElement("p");
+            var div_time = document.createElement("div");
+            if (data.nick == user) {
+                h6_nick.style = "text-align: right;"
+                div_chat.className = "float-right chat-body2 clearfix"
+                div_time.className = "chat_time float-right"
+            } else if (data.nick == "system") {
+                h6_nick.style = "text-align: center;"
+                div_chat.className = "chat-body-sytem"
+                div_time.className = "chat_time float-left"
+            } else {
+                h6_nick.style = "text-align: left;"
+                div_chat.className = "float-left chat-body1 clearfix"
+                div_time.className = "chat_time float-left"
+            }
+            h6_nick.textContent = data.nick
+            p_chat.textContent = data.chat
+            var timenowString = new Date().toLocaleTimeString();
+            div_time.textContent = timenowString
+            div_chat.appendChild(p_chat);
+            div_chat.appendChild(div_time);
+            li.appendChild(h6_nick);
+            li.appendChild(div_chat);
+            ul.appendChild(li);
+            scrollAlwaysDown()
+        });
+        socket.on('cardGame', function(data) {
+            console.log(data);
+            var ul = document.getElementById("chat-list");
+            var li = document.createElement("li");
+            li.className = "left clearfix"
+            li.style = "margin-bottom:5px;"
+
+            var div = document.createElement("div");
+            div.className = "chat-body-sytem"
+            var p = document.createElement("p");
+            p.align = "center";
+            p.textContent = data.chat
+            div.appendChild(p);
+            li.appendChild(div);
+            ul.appendChild(li);
+            scrollAlwaysDown();
+        });
+
+
+        socket.on('collectBet', function(data) {
+            const betOutcome = betChoice;
+            const betMoneystr = document.getElementById("betMoney").value;
+            var isnum = /^\d+$/.test(betMoneystr);
+            if (isnum){
+                betMoney = parseInt(betMoneystr);
+            }else{
+                betMoney = 0;
+            }
+
+            socket.emit('betSend', {
+                betOutcome: betOutcome,
+                betMoney: betMoney
+            });
+            //betSend(betChoice, betMoney);
+        });
+
+        socket.on("updateAccountShowShoe", function(data) {
+            showGame(data.pHand,data.bHand,data.payout,data.newUserMoney,data.outcome);
+        });
+
+        socket.on("syncTime", function(data) {
+            console.log("time Sync")
+            document.getElementById("timeOut").textContent = data.syncTime;
+        });        
+
+        document.querySelector("#chat-form").addEventListener('submit', function(e) {
+            e.preventDefault();
+            if (e.target.chat.value) {
+                var xhr = new XMLHttpRequest();
+                xhr.onload = function() {
+                    if (xhr.status === 200) {
+                        e.target.chat.value = '';
+                    } else {
+                        console.error(xhr.responseText);
+                    }
+                }
+                xhr.open('POST', '/game/chat');
+                xhr.setRequestHeader('Content-Type', 'application/json');
+                xhr.send(JSON.stringify({
+                    chat: this.chat.value
+                }))
+            }
+
+        });
+    
+        function chBetTag(ch) {
+            betChoice = ch;
+            console.log(betChoice);
+        }
+    </script>
+    <% include ./footer %>
+</html>

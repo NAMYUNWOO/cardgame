@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+<% include ./head.ejs %>
+    <body style="background-color:#212529">
+
+        <div class="container">
+            <div class="col-md-12" align="center">
+                <img class="img-fluid" style="max-width:80%;" alt="Responsive image" src="images/newyork_square.jpg">
+                <div style="width: 20rem;margin-top:1rem ;background-color:#212529">
+
+                    <form action="/auth/signin" method="post" name="signInForm">
+                        <input type="text" id="code" name="code" class="form-control" placeholder="코드" style="margin-bottom:5px;" />
+                        <input type="password" id="password" name="password" class="form-control" placeholder="암호" style="margin-bottom:5px;" />
+                        <br>
+                        <input type="submit" id="SignIn" class="form-control btn-outline-warning sign" onclick=signIn() value="Log In" style="margin-bottom:10px;" />
+                    </form>
+                    <a class="form-control btn-outline-warning sign" href="/signup" style="margin-bottom:10px;">가입</a>
+                    <br>
+
+                </div>
+
+            </div>
+            <!-- Optional JavaScript -->
+            <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    </body>
+    <script>
+        function signIn() {
+            var code = document.getElementById('code');
+            var passwordd = document.getElementById('password');
+            if (code.value == "") {
+                alert("코드를 입력해주세요");
+                code.focus();
+                return
+            }
+            if (passwordd.value == "") {
+                alert("암호를 입력해주세요");
+                passwordd.focus();
+                return
+            }
+            signInForm.submit();
+        }
+    </script>
+    <% include ./footer.ejs %>
+</html>
