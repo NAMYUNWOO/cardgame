@@ -67,7 +67,6 @@
 
         socket.on('join', function(data) {
             console.log(data.chat);
-            socket.emit("getSyncTime", "")
             var ul = document.getElementById("chat-list");
             var li = document.createElement("li");
             li.className = "left clearfix"
