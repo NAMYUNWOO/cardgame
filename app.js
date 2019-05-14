@@ -44,7 +44,8 @@ const sessionMiddleware = session({
     cookie: {
         httpOnly: true,
         secure: false
-    }
+    },
+    proxy: true
 });
 app.use(sessionMiddleware);
 
