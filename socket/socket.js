@@ -29,6 +29,7 @@ module.exports = (server, app, sessionMiddleWare) => {
             gameResult: GameRes,
             gameId: gameId,
         });
+        app.gameStartTime = parseInt(new Date().getTime() / 1000);
         game.emit('collectBet', { collectBet: "null String" });
     }, 25000);
 
@@ -53,7 +54,7 @@ module.exports = (server, app, sessionMiddleWare) => {
         });
 
         socket.on("getSyncTime", async(data) => {
-            var syncTime = 25 - (parseInt(new Date().getTime() / 1000) - app.gameStartTime);
+            var syncTime = Math.max(25 - (parseInt(new Date().getTime() / 1000) - app.gameStartTime), 0);
             game.to(roomId).emit("syncTime", { syncTime: syncTime })
 
         });
@@ -96,7 +97,6 @@ module.exports = (server, app, sessionMiddleWare) => {
                 }
                 // only to sender client
                 var gameRes = JSON.parse(app.gameInfo.gameRes);
-                app.gameStartTime = parseInt(new Date().getTime() / 1000);
                 socket.emit("updateAccountShowShoe", {
                     newUserMoney: newUserMoney,
                     payout: payout,

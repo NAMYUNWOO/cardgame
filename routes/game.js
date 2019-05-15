@@ -12,7 +12,7 @@ router.get('/', isLoggedIn, function(req, res, next) {
 
     chats = [{ user: "system", chat: "바르고 고운 말을 씁시다", time: "2019-05-08 20:01:00" }, ];
 
-    var timeLeft = 25 - (parseInt(new Date().getTime() / 1000) - req.app.gameStartTime)
+    var timeLeft = Math.max(25 - (parseInt(new Date().getTime() / 1000) - req.app.gameStartTime), 0);
     res.render('game', { nick: nick, myprofile: req.user, chats: chats, user: nick, money: req.user.dataValues.money, timeLeft: timeLeft });
 });
 

@@ -38,7 +38,7 @@
             var t = document.getElementById("timeOut").innerText;
             // Output the result in an element with id="demo"
             if (t != "게임 결과"){
-                document.getElementById("timeOut").innerHTML = parseInt(t) - 1;
+                document.getElementById("timeOut").innerHTML = Math.max(0, parseInt(t) - 1);
             }else{
             }
 
@@ -56,7 +56,7 @@
             messageBody.scrollTop = messageBody.scrollHeight - messageBody.clientHeight;
         }
         var payout = 0;
-        var socket = io.connect("http://localhost/game", {
+        var socket = io.connect("http://34.74.41.172/game", {
             path: '/socket.io'
         });
         var user = "<%= user %>"
@@ -66,6 +66,7 @@
         })
 
         socket.on('join', function(data) {
+            socket.emit("getSyncTime", "");
             console.log(data.chat);
             var ul = document.getElementById("chat-list");
             var li = document.createElement("li");

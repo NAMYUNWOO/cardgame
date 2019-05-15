@@ -286,7 +286,7 @@ const showGame = (pHand, bHand, payout, newUserMoney, outcome) => {
     winnerMark(outcome);
     setTimeout(() => {
         showWaitingCards();
-        socket.emit("getSyncTime", "")
+        socket.emit("getSyncTime", "");
         var pBoard = document.getElementById("playerBoard");
         pBoard.setAttribute("style", "border:1px solid grey;");
         var bBoard = document.getElementById("bankerBoard");
