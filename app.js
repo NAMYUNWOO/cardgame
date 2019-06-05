@@ -51,12 +51,22 @@ const sessionMiddleware = session({
         httpOnly: true,
         secure: false
     },
-    proxy: true
+    proxy: false
 });
+
+
+
 app.use(sessionMiddleware);
 
 app.use(passport.initialize());
 app.use(passport.session());
+
+if (process.env.NODE_ENV === 'production') {
+    app.use(morgan('combine'))
+} else {
+    app.use(morgan('dev'));
+}
+
 
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, 'BJS')));
