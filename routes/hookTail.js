@@ -22,16 +22,20 @@ router.post('/register', async function(req, res, next) {
         message = "unknown"
         return res.json({ message: message, error: exception });
     }
+    return res.json({ message: "" });
 
 });
 
-router.post('/score', function(req, res, next) {
+router.post('/score', async function(req, res, next) {
     const { nick, score } = req.body;
-    UserHookTail.update({
+    await UserHookTail.update({
         score: score,
     }, {
         where: { nick: nick }
     });
+
+    return res.json({ nick: nick, score: score });
+
 });
 
 router.get('/ranking', function(req, res, next) {
