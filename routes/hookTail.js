@@ -5,8 +5,9 @@ var router = express.Router();
 router.post('/register', async function(req, res, next) {
     const { nick, score } = req.body;
     console.log(nick, score);
+    const exNick = await UserHookTail.findOne({ where: { nick: nick } });
     try {
-        const exNick = await UserHookTail.findOne({ where: { nick: nick } });
+
         if (exNick) {
             message = 'nickExists'
             return res.json({ message: message });
