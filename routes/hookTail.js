@@ -47,22 +47,34 @@ router.post('/score', async function(req, res, next) {
 
 router.post('/ranking', async function(req, res, next) {
     const { nick } = req.body;
-    const ranking = await UserHookTail.findAll({
-        attributes: ["nick", "score"],
-        order: [
-            ['score', 'DESC']
-        ]
-    });
-    var rankingArr = [];
-    var useridx = 0;
-    for (var i = 0; i < ranking.length; i++) {
-        var obji = ranking[i];
-        rankingArr.push([obji.nick, obji.score.toString()]);
-        if (obji.nick == nick) {
-            useridx = i;
+    try {
+        const ranking = await UserHookTail.findAll({
+            attributes: ["nick", "score"],
+            order: [
+                ['score', 'DESC']
+            ]
+        });
+        var rankingArr = [];
+        var useridx = 0;
+        for (var i = 0; i < ranking.length; i++) {
+            var obji = ranking[i];
+            rankingArr.push([obji.nick, obji.score.toString()]);
+            if (obji.nick == nick) {
+                useridx = i;
+            }
         }
+
+        return res.json({ rankingArr: rankingArr, useridx: useridx, message: "success" });
+
+    } catch (exception) {
+        return res.json({
+            rankingArr: [
+                ["", ""]
+            ],
+            useridx: 0,
+            message: "error"
+        });
     }
 
-    return res.json({ rankingArr: rankingArr, useridx: useridx });
 });
 module.exports = router;
