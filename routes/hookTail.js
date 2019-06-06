@@ -55,7 +55,7 @@ router.post('/ranking', async function(req, res, next) {
     });
     var rankingArr = [];
     var useridx = 0;
-    for (var i = 0; i < ranking.length(); i++) {
+    for (var i = 0; i < ranking.length; i++) {
         var obji = ranking[i];
         rankingArr.push([obji.nick, obji.score.toString()]);
         if (obji.nick == nick) {
