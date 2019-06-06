@@ -11,7 +11,7 @@ router.post('/register', function(req, res, next) {
             message = 'nickExists'
             return res.json({ message: message });
         } else {
-            await UserHookTail.create({
+            UserHookTail.create({
                 nick: nick,
                 score: score,
             });
