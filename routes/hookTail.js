@@ -1,13 +1,13 @@
 var express = require('express');
 var router = express.Router();
+const { UserHookTail } = require('../models');
 
 /* GET home page. */
 router.post('/register', async function(req, res, next) {
     const { nick, score } = req.body;
     console.log(nick, score);
-    const exNick = await UserHookTail.findOne({ where: { nick: nick } });
     try {
-
+        const exNick = await UserHookTail.findOne({ where: { nick: nick } });
         if (exNick) {
             message = 'nickExists'
             return res.json({ message: message });
@@ -23,7 +23,7 @@ router.post('/register', async function(req, res, next) {
         message = "unknown"
         return res.json({ message: message, error: exception });
     }
-    return res.json({ message: "" });
+
 
 });
 
