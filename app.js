@@ -62,9 +62,9 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 if (process.env.NODE_ENV === 'production') {
-    app.use(morgan('combine'))
+    app.use(logger('combine'))
 } else {
-    app.use(morgan('dev'));
+    app.use(logger('dev'));
 }
 
 
