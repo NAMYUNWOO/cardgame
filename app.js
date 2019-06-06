@@ -6,6 +6,8 @@ const sqlite = require('sqlite3');
 const session = require('express-session');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+const bodyParser = require('body-parser')
+
 
 const authRouter = require('./routes/auth');
 var signinRouter = require('./routes/signin');
@@ -34,6 +36,8 @@ app.all('/*', function(req, res, next) {
 });
 
 // view engine setup
+app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({ extended: false }))
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 app.use(cors());
