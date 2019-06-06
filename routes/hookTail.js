@@ -20,8 +20,8 @@ router.post('/register', async function(req, res, next) {
             return res.json({ message: message });
         }
     } catch (exception) {
-        message = "unknown"
-        return res.json({ message: message, error: exception });
+        message = "error"
+        return res.json({ message: message });
     }
 
 
@@ -29,13 +29,19 @@ router.post('/register', async function(req, res, next) {
 
 router.post('/score', async function(req, res, next) {
     const { nick, score } = req.body;
-    await UserHookTail.update({
-        score: score,
-    }, {
-        where: { nick: nick }
-    });
+    try {
+        await UserHookTail.update({
+            score: score,
+        }, {
+            where: { nick: nick }
+        });
 
-    return res.json({ nick: nick, score: score });
+        return res.json({ message: "success" });
+
+    } catch (exception) {
+        return res.json({ message: "fail" });
+
+    }
 
 });
 
@@ -48,6 +54,16 @@ router.post('/ranking', async function(req, res, next) {
         ]
     });
     const nickRes = await UserHookTail.findOne({ where: { nick: nick } });
-    return res.json({ ranking: ranking, score: nickRes.score });
+    var rankingArr = [];
+    var useridx = 0;
+    for (var i = 0; i < nickRes.length(); i++) {
+        var obji = nickRes[i];
+        rankingArr.push([obji.nick, obji.score.toString()]);
+        if (obji.nick == nick) {
+            useridx = i;
+        }
+    }
+
+    return res.json({ rankingArr: rankingArr, useridx: useridx });
 });
 module.exports = router;
