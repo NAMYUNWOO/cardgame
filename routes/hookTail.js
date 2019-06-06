@@ -54,24 +54,25 @@ router.post('/ranking', async function(req, res, next) {
                 ['score', 'DESC']
             ]
         });
-        var rankingArr = [];
+        var rankingUsers = [];
+        var rankingScores = [];
         var useridx = 0;
         for (var i = 0; i < ranking.length; i++) {
             var obji = ranking[i];
-            rankingArr.push([obji.nick, obji.score.toString()]);
+            rankingUsers.push(obji.nick)
+            rankingScores.push(obji.score.toString());
             if (obji.nick == nick) {
                 useridx = i;
             }
         }
 
-        return res.json({ rankingArr: rankingArr, useridx: useridx, message: "success" });
+        return res.json({ rankingUsers: rankingUsers, rankingScores: rankingScores, useridx: useridx, message: "success" });
 
     } catch (exception) {
         return res.json({
-            rankingArr: [
-                ["", ""]
-            ],
-            useridx: 0,
+            rankingUsers: [""],
+            rankingScores: [""],
+            useridx: useridx,
             message: "error"
         });
     }
