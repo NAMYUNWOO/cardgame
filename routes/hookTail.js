@@ -45,7 +45,7 @@ router.post('/ranking', async function(req, res, next) {
         attributes: ["nick", "score"],
         order: ['score', 'DESC']
     });
-    const nick = await UserHookTail.findOne({ where: { nick: nick } });
-    return res.json({ ranking: ranking, score: nick.score });
+    const nickRes = await UserHookTail.findOne({ where: { nick: nick } });
+    return res.json({ ranking: ranking, score: nickRes.score });
 });
 module.exports = router;
