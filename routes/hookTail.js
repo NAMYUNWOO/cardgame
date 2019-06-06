@@ -9,18 +9,18 @@ router.post('/register', async function(req, res, next) {
         const exNick = await UserHookTail.findOne({ where: { nick: nick } });
         if (exNick) {
             message = 'nickExists'
-            return res.status(200).json({ message: message });
+            return res.json({ message: message });
         } else {
             await UserHookTail.create({
                 nick: nick,
                 score: score,
             });
             message = "success"
-            return res.status(200).json({ message: message });
+            return res.json({ message: message });
         }
     } catch (error) {
         message = "unknown"
-        return res.status(404).json({ message: message });
+        return res.json({ message: message });
     }
 });
 
