@@ -39,12 +39,13 @@ router.post('/score', async function(req, res, next) {
 
 });
 
-router.get('/ranking', function(req, res, next) {
-    const rankings = UserHookTail.findAll({
-        offset: 0,
-        limit: 100,
-        order: 'score desc'
+router.post('/ranking', async function(req, res, next) {
+    const { nick } = req.body;
+    const ranking = await UserHookTail.findAll({
+        attributes: ["nick", "score"],
+        order: ['score', 'DESC']
     });
-    return res.json(rankings);
+    const nick = await UserHookTail.findOne({ where: { nick: nick } });
+    return res.json({ ranking: ranking, score: nick.score });
 });
 module.exports = router;
