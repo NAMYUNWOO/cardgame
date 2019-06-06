@@ -43,7 +43,9 @@ router.post('/ranking', async function(req, res, next) {
     const { nick } = req.body;
     const ranking = await UserHookTail.findAll({
         attributes: ["nick", "score"],
-        order: ['score', 'DESC']
+        order: [
+            ['score', 'DESC']
+        ]
     });
     const nickRes = await UserHookTail.findOne({ where: { nick: nick } });
     return res.json({ ranking: ranking, score: nickRes.score });
