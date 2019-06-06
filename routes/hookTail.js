@@ -2,11 +2,11 @@ var express = require('express');
 var router = express.Router();
 
 /* GET home page. */
-router.post('/register', async function(req, res, next) {
+router.post('/register', function(req, res, next) {
     const { nick, score } = req.body;
 
     try {
-        const exNick = await UserHookTail.findOne({ where: { nick: nick } });
+        const exNick = UserHookTail.findOne({ where: { nick: nick } });
         if (exNick) {
             message = 'nickExists'
             return res.json({ message: message });
@@ -18,10 +18,11 @@ router.post('/register', async function(req, res, next) {
             message = "success"
             return res.json({ message: message });
         }
-    } catch (error) {
+    } catch (exception) {
         message = "unknown"
-        return res.json({ message: message, error: error });
+        return res.json({ message: message, error: exception });
     }
+
 });
 
 router.post('/score', function(req, res, next) {
