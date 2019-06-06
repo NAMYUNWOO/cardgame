@@ -2,16 +2,16 @@ var express = require('express');
 var router = express.Router();
 
 /* GET home page. */
-router.post('/register', function(req, res, next) {
+router.post('/register', async function(req, res, next) {
     const { nick, score } = req.body;
-
+    console.log(nick, score);
     try {
-        const exNick = UserHookTail.findOne({ where: { nick: nick } });
+        const exNick = await UserHookTail.findOne({ where: { nick: nick } });
         if (exNick) {
             message = 'nickExists'
             return res.json({ message: message });
         } else {
-            UserHookTail.create({
+            await UserHookTail.create({
                 nick: nick,
                 score: score,
             });
