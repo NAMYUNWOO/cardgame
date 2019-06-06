@@ -20,7 +20,7 @@ router.post('/register', async function(req, res, next) {
         }
     } catch (error) {
         message = "unknown"
-        return res.json({ message: message });
+        return res.json({ message: message, error: error });
     }
 });
 
@@ -39,6 +39,6 @@ router.get('/ranking', function(req, res, next) {
         limit: 100,
         order: 'score desc'
     });
-    console.log(rankings);
+    return res.json(rankings);
 });
 module.exports = router;
