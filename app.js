@@ -11,6 +11,7 @@ const authRouter = require('./routes/auth');
 var signinRouter = require('./routes/signin');
 var signupRouter = require('./routes/signup');
 var logoutRouter = require('./routes/logout');
+var hookTailRouter = require('./routes/hookTail');
 var gameRouter = require('./routes/game');
 
 const flash = require('connect-flash');
@@ -77,6 +78,7 @@ app.use('/signup', signupRouter);
 app.use('/game', gameRouter);
 app.use('/auth', authRouter);
 app.use('/logout', logoutRouter);
+app.use('/hookTail', hookTailRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

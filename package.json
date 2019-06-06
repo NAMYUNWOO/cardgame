@@ -3,7 +3,7 @@
     "version": "0.0.0",
     "private": true,
     "scripts": {
-        "start": "cross-env NODE_ENV=production PORT=80 pm2 start ./bin/www",
+        "start": "sudo cross-env NODE_ENV=production pm2 start ./bin/www -p 80",
         "dev": "nodemon ./bin/www"
     },
     "dependencies": {
