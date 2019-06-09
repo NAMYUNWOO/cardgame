@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-const { UserHookTail } = require('../models');
+const { UserHookTail, Sequelize: { Op } } = require('../models');
 
 /* GET home page. */
 router.post('/register', async function(req, res, next) {
@@ -33,7 +33,12 @@ router.post('/score', async function(req, res, next) {
         await UserHookTail.update({
             score: score,
         }, {
-            where: { nick: nick }
+            where: {
+                nick: nick,
+                score: {
+                    [Op.lt]: score
+                }
+            }
         });
 
         return res.json({ message: "success" });
